@@ -1,6 +1,6 @@
 package com.company;
 
-import com.company.passive.workers.PassiveFiletransferAsync;
+import com.company.passive.workers.PassiveFileTransferAsync;
 import com.company.passive.workers.PassiveListAsync;
 
 import java.io.File;
@@ -27,8 +27,19 @@ public class InputHelper {
                 retreiveFile(input);
             }
             else if (input.startsWith("LIST")) {
-                System.out.println("Before funcion getList");
                 getList();
+            }
+            else if (input.startsWith("PWD")) {
+                printWorkingDir();
+            }
+            else if (input.startsWith("CWD")) {
+                changeWorkingDir(input);
+            }
+            else if (input.equals("CDUP")) {
+                moveWorkingDirUp();
+            }
+            else {
+                client.write("502 Command unknown or not implemented.");
             }
         }
         else {
@@ -70,15 +81,12 @@ public class InputHelper {
     }
     private void startPassiveConnection() throws IOException {
         ServerSocket socket = new ServerSocket(0);
-
         PassiveConnection pasv = new PassiveConnection(socket);
         pasv.execute();
         client.setPassiveConnection(pasv);
 
         int port = socket.getLocalPort();
-
         String[] addr = InetAddress.getLocalHost().getHostAddress().split("\\."); //split the ip address into parts
-
         String output = "227 Entering Passive Mode (" + addr[0] + "," + addr[1] + "," + addr[2] + "," + addr[3] + ","
                 + (port >> 8) + ","+ (port & 0xFF) + ").";
 
@@ -93,7 +101,7 @@ public class InputHelper {
                 return;
             }
             client.write("150 Opening BINARY mode data connection for " + filename + " (" + file.length() + " bytes).");
-            PassiveFiletransferAsync pasvAsync = new PassiveFiletransferAsync(client, filename);
+            PassiveFileTransferAsync pasvAsync = new PassiveFileTransferAsync(client, filename);
             pasvAsync.execute();
         }
         else {
@@ -102,7 +110,6 @@ public class InputHelper {
     }
 
     private void getList() throws IOException {
-        System.out.println("LIST .... " + client.getPassiveConnection().getDataSocket());
         if (client.getPassiveConnection().getDataSocket().isConnected()) {
             client.write("150 Here comes the directory listing.");
             PassiveListAsync pasvAsync = new PassiveListAsync(client);
@@ -110,6 +117,34 @@ public class InputHelper {
         }
         else {
             client.write("425 Use PORT or PASV first.");
+        }
+    }
+
+    private void printWorkingDir() throws IOException {
+        client.write("257 " + client.getWorkingDir().substring(client.getWorkingDir().indexOf("/shared"), client.getWorkingDir().length()));
+    }
+
+    private void changeWorkingDir(String input) throws IOException {
+        String path = input.replace("CWD", "").trim();
+        File newDir = new File(client.getWorkingDir() + path);
+        if (!newDir.exists() || !newDir.getAbsolutePath().replace("\\", "/").contains("/shared") || path.contains("..")) {
+            client.write("550 Failed to change directory.");
+        }
+        else {
+            client.setWorkingDir(newDir.getAbsolutePath().replace("\\", "/"));
+            client.write("250 Directory successfully changed.");
+        }
+    }
+
+    private void moveWorkingDirUp() throws IOException {
+        File newDir = new File(client.getWorkingDir().substring(0, client.getWorkingDir().lastIndexOf("/")));
+
+        if (!newDir.exists() || !newDir.getAbsolutePath().replace("\\", "/").contains("/shared")) {
+            client.write("550 Failed to change directory.");
+        }
+        else {
+            client.setWorkingDir(newDir.getAbsolutePath().replace("\\", "/"));
+            client.write("250 Directory successfully changed.");
         }
     }
 }

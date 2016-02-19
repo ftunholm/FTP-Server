@@ -18,7 +18,7 @@ public class PassiveListAsync extends SwingWorker<Void, Void> {
     @Override
     protected Void doInBackground() throws Exception {
         OutputStreamWriter out = new OutputStreamWriter(client.getPassiveConnection().getDataSocket().getOutputStream());
-        File folder = new File("shared");
+        File folder = new File(client.getWorkingDir().replace("\\", "/"));
         try {
             File[] listOfFiles = folder.listFiles();
 

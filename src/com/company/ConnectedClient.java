@@ -12,11 +12,13 @@ public class ConnectedClient implements Runnable {
     private boolean isLoggedIn = false;
     private boolean usernameVerified = false;
     private PassiveConnection passiveConnection;
+    public String workingDir = System.getProperty("user.dir") + "/shared";
 
     public ConnectedClient(Socket clientSocket) throws IOException {
+        this.workingDir = workingDir.replace("\\", "/");
         this.out = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
         this.clientSocket = clientSocket;
-        write("220 (elHeffeFTPPro+++)");
+        write("220 (elHeffeFTPPro+++ By LanfeaR - 2k)");
     }
 
     public void write(String s) throws IOException {
@@ -59,7 +61,6 @@ public class ConnectedClient implements Runnable {
     public boolean isUsernameVerified() {
         return usernameVerified;
     }
-
     public void setUsernameVerified(boolean usernameVerified) {
         this.usernameVerified = usernameVerified;
     }
@@ -68,5 +69,11 @@ public class ConnectedClient implements Runnable {
     }
     public void setPassiveConnection(PassiveConnection passiveConnection) {
         this.passiveConnection = passiveConnection;
+    }
+    public String getWorkingDir() {
+        return workingDir;
+    }
+    public void setWorkingDir(String workingDir) {
+        this.workingDir = workingDir.replace("\\", "");
     }
 }

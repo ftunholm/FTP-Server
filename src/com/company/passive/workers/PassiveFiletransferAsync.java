@@ -9,12 +9,12 @@ import java.io.OutputStream;
 /**
  * Created by LogiX on 2016-02-19.
  */
-public class PassiveFiletransferAsync extends SwingWorker<Void, Void> {
+public class PassiveFileTransferAsync extends SwingWorker<Void, Void> {
     private String filename;
     private ConnectedClient client;
     private static final int BUFF_SIZE = 8*1024;
 
-    public PassiveFiletransferAsync(ConnectedClient client, String filename) {
+    public PassiveFileTransferAsync(ConnectedClient client, String filename) {
         this.client = client;
         this.filename = filename;
     }
