@@ -37,6 +37,9 @@ public class InputHelper {
             else if (input.equals("CDUP")) {
                 moveWorkingDirUp();
             }
+            else if (input.equals("QUIT")) {
+                quit();
+            }
             else {
                 client.write("502 Command unknown or not implemented.");
             }
@@ -145,5 +148,9 @@ public class InputHelper {
             client.setWorkingDir(newDir.getAbsolutePath().replace("\\", "/"));
             client.write("250 Directory successfully changed.");
         }
+    }
+
+    private void quit() throws IOException {
+        client.disconnect();
     }
 }

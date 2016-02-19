@@ -9,6 +9,7 @@ import java.net.Socket;
 public class ConnectedClient implements Runnable {
     private Socket clientSocket;
     private OutputStreamWriter out;
+    private BufferedReader in;
     private boolean isLoggedIn = false;
     private boolean usernameVerified = false;
     private PassiveConnection passiveConnection;
@@ -27,9 +28,17 @@ public class ConnectedClient implements Runnable {
         out.flush();
     }
 
+    public void disconnect() throws IOException {
+        if (this.passiveConnection.getDataSocket() != null) {
+            this.passiveConnection.getDataSocket().close();
+        }
+        in.close();
+        out.close();
+        clientSocket.close();
+    }
+
     @Override
     public void run() {
-        BufferedReader in = null;
         try {
             InputHelper helper = new InputHelper(this);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
@@ -42,9 +51,9 @@ public class ConnectedClient implements Runnable {
         }
         finally {
             try {
+                clientSocket.close();
                 in.close();
                 out.close();
-                clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
