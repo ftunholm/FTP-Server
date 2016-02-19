@@ -18,7 +18,6 @@ public class InputHelper {
     }
 
     public void processInput(String input) throws IOException {
-        System.out.println("Input: " + input);
         if (client.isLoggedIn()) {
             if (input.startsWith("PASV")) {
                 startPassiveConnection();
@@ -95,13 +94,13 @@ public class InputHelper {
     private void retreiveFile(String input) throws IOException {
         if (client.getPassiveConnection().getDataSocket().isConnected()) {
             String filename = input.replace("RETR ", "");
-            File file = new File("shared/" + filename);
+            File file = new File(client.getWorkingDir() + "/" + filename);
             if (!file.exists()) {
                 client.write("550 Failed to open file.");
                 return;
             }
             client.write("150 Opening BINARY mode data connection for " + filename + " (" + file.length() + " bytes).");
-            PassiveFileTransferAsync pasvAsync = new PassiveFileTransferAsync(client, filename);
+            PassiveFileTransferAsync pasvAsync = new PassiveFileTransferAsync(client, file.getAbsolutePath());
             pasvAsync.execute();
         }
         else {

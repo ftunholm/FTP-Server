@@ -21,7 +21,7 @@ public class PassiveFileTransferAsync extends SwingWorker<Void, Void> {
 
     @Override
     protected Void doInBackground() throws Exception {
-        FileInputStream in = new FileInputStream("shared/" + filename);
+        FileInputStream in = new FileInputStream(filename);
         OutputStream out = client.getPassiveConnection().getDataSocket().getOutputStream();
 
         try {
