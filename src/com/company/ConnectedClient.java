@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.workers.PassiveConnection;
+
 import java.io.*;
 import java.net.Socket;
 

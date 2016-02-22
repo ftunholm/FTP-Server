@@ -1,4 +1,4 @@
-package com.company;
+package com.company.workers;
 
 import javax.swing.*;
 import java.net.ServerSocket;

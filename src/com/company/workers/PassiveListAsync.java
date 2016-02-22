@@ -1,4 +1,4 @@
-package com.company.passive.workers;
+package com.company.workers;
 
 import com.company.ConnectedClient;
 import javax.swing.*;

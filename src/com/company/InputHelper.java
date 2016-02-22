@@ -1,7 +1,8 @@
 package com.company;
 
-import com.company.passive.workers.PassiveFileTransferAsync;
-import com.company.passive.workers.PassiveListAsync;
+import com.company.workers.PassiveConnection;
+import com.company.workers.PassiveFileTransferAsync;
+import com.company.workers.PassiveListAsync;
 
 import java.io.File;
 import java.io.IOException;
