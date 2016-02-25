@@ -4,6 +4,7 @@ import com.company.ConnectedClient;
 import javax.swing.*;
 import java.io.File;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 
 /**
  * Created by LogiX on 2016-02-19.
@@ -21,10 +22,15 @@ public class PassiveListAsync extends SwingWorker<Void, Void> {
         File folder = new File(client.getWorkingDir().replace("\\", "/"));
         try {
             File[] listOfFiles = folder.listFiles();
-
             for (int i = 0; i < listOfFiles.length; i++) {
-                System.out.println(listOfFiles[i].length() + " " + listOfFiles[i].getName() + "\n");
-                out.write(listOfFiles[i].length() + " " + listOfFiles[i].getName() + "\n");
+                String fileinfo = "";
+                fileinfo += listOfFiles[i].canRead() ? "r" : "-";
+                fileinfo += listOfFiles[i].canWrite() ? "w" : "-";
+                fileinfo += listOfFiles[i].canExecute() ? "x\t" : "-\t";
+                Date d = new Date(listOfFiles[i].lastModified());
+                fileinfo += listOfFiles[i].length() + "\t" + d + " " + listOfFiles[i].getName();
+
+                out.write(fileinfo + "\n\r");
             }
             out.flush();
         }

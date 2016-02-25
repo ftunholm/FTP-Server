@@ -3,26 +3,27 @@ package com.company.workers;
 import com.company.ConnectedClient;
 
 import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 /**
- * Created by LogiX on 2016-02-19.
+ * Created by LogiX on 2016-02-24.
  */
-public class PassiveFileTransferAsync extends SwingWorker<Void, Void> {
+public class PassiveFileUploadAsync extends SwingWorker<Void, Void> {
+
     private String filename;
     private ConnectedClient client;
     private static final int BUFF_SIZE = 8*1024;
 
-    public PassiveFileTransferAsync(ConnectedClient client, String filename) {
+    public PassiveFileUploadAsync(ConnectedClient client, String filename) {
         this.client = client;
         this.filename = filename;
     }
 
     @Override
     protected Void doInBackground() throws Exception {
-        FileInputStream in = new FileInputStream(filename);
-        OutputStream out = client.getPassiveConnection().getDataSocket().getOutputStream();
+        FileOutputStream out = new FileOutputStream(filename);
+        InputStream in = client.getPassiveConnection().getDataSocket().getInputStream();
 
         try {
             byte[] buff = new byte[BUFF_SIZE];

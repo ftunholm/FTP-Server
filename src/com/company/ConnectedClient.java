@@ -25,8 +25,8 @@ public class ConnectedClient implements Runnable {
     }
 
     public void write(String s) throws IOException {
-        //out.write(s);
-        out.write(s + "\n\r");
+        out.write(s + "\r\n");
+        //out.write(s + "\n\r");
         out.flush();
     }
 
@@ -60,6 +60,21 @@ public class ConnectedClient implements Runnable {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    public boolean hasPassiveConnection() throws IOException {
+        if (this.getPassiveConnection() != null) {
+            if (this.getPassiveConnection().getDataSocket() != null) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            this.write("425 Use PORT or PASV first.");
+            return false;
         }
     }
 

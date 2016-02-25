@@ -13,7 +13,7 @@ public class FtpServer {
     private final static int PORT = 21;
     private final static int NUMBER_OF_CLIENTS_ALLOWED = 20;
     public static final String PASSWORD = "kanske";
-    public static final String USERNAME = "kalle";
+    public static final String USERNAME = "anonymous";
 
     public FtpServer() {
         startServer();
