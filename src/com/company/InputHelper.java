@@ -46,6 +46,9 @@ public class InputHelper {
             else if (input.startsWith("CWD")) {
                 changeWorkingDir(input);
             }
+            else if (input.startsWith("MKD")) {
+                createRemoteDir(input);
+            }
             else if (input.equals("CDUP")) {
                 moveWorkingDirUp();
             }
@@ -173,6 +176,21 @@ public class InputHelper {
             client.write("150 Here comes the directory listing.");
             PassiveListAsync pasvAsync = new PassiveListAsync(client);
             pasvAsync.execute();
+        }
+    }
+    private void createRemoteDir(String input) throws IOException {
+        String filename = input.replace("MKD ", "");
+        File file = new File(client.getWorkingDir() + "/" + filename);
+        if (file.exists()) {
+            client.write("550 Directory already exists.");
+            return;
+        }
+        boolean isCreated = file.mkdirs();
+        if (isCreated) {
+            client.write("250 Directory created successfully.");
+        }
+        else {
+            client.write("550 Permission denied.");
         }
     }
     private void printWorkingDir() throws IOException {

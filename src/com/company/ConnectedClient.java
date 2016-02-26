@@ -26,7 +26,6 @@ public class ConnectedClient implements Runnable {
 
     public void write(String s) throws IOException {
         out.write(s + "\r\n");
-        //out.write(s + "\n\r");
         out.flush();
     }
 
