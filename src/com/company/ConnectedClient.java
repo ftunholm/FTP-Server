@@ -48,7 +48,7 @@ public class ConnectedClient implements Runnable {
                 helper.processInput(line);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Client has disconnected.");
         }
         finally {
             try {
@@ -63,18 +63,7 @@ public class ConnectedClient implements Runnable {
     }
 
     public boolean hasPassiveConnection() throws IOException {
-        if (this.getPassiveConnection() != null) {
-            if (this.getPassiveConnection().getDataSocket() != null) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            this.write("425 Use PORT or PASV first.");
-            return false;
-        }
+        return this.getPassiveConnection() != null && this.getPassiveConnection().getDataSocket() != null;
     }
 
     public boolean isLoggedIn() {

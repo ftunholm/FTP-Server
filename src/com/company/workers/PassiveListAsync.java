@@ -33,14 +33,13 @@ public class PassiveListAsync extends SwingWorker<Void, Void> {
                 out.write(fileinfo + "\n\r");
             }
             out.flush();
+            client.write("226 Directory send OK.");
         }
         catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
+            System.out.println("Client has disconnected.");
+        } finally {
             out.close();
             client.getPassiveConnection().getDataSocket().close();
-            client.write("226 Directory send OK.");
         }
         return null;
     }

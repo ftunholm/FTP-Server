@@ -32,15 +32,15 @@ public class PassiveFileUploadAsync extends SwingWorker<Void, Void> {
                 out.write(buff, 0, len);
             }
             out.flush();
+            client.write("226 Transfer complete.");
         }
         catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Client has disconnected.");
         }
         finally {
             in.close();
             out.close();
             client.getPassiveConnection().getDataSocket().close();
-            client.write("226 Transfer complete.");
         }
         return null;
     }

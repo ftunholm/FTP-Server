@@ -56,13 +56,16 @@ public class InputHelper {
                 quit();
             }
             else if (input.startsWith("EPSV")) {
-                client.write("500 Not supported.");
+                client.write("502 Not supported.");
             }
             else if (input.startsWith("FEAT")) {
-                client.write("500 Not supported.");
+                client.write("502 Not supported.");
             }
             else if (input.startsWith("EPRT")) {
-                client.write("500 Not supported.");
+                client.write("502 Not supported.");
+            }
+            else if (input.startsWith("XPWD")) {
+                client.write("502 Not supported.");
             }
             else {
                 client.write("502 Command unknown or not implemented.");
@@ -92,7 +95,8 @@ public class InputHelper {
         }
         else {
             client.setUsernameVerified(false);
-            client.write("530 please login with USER and PASS.");
+            client.write("530 This FTP server is anonymous only.");
+            //client.write("530 please login with USER and PASS.");
         }
     }
     private void checkPassword(String input) throws IOException {
@@ -157,6 +161,9 @@ public class InputHelper {
             PassiveFileDownloadAsync pasvAsync = new PassiveFileDownloadAsync(client, file.getAbsolutePath());
             pasvAsync.execute();
         }
+        else {
+            client.write("425 Use PORT or PASV first.");
+        }
     }
     private void storeFile(String input) throws IOException {
         if (client.hasPassiveConnection()) {
@@ -170,12 +177,18 @@ public class InputHelper {
             PassiveFileUploadAsync pasvAsync = new PassiveFileUploadAsync(client, file.getAbsolutePath());
             pasvAsync.execute();
         }
+        else {
+            client.write("425 Use PORT or PASV first.");
+        }
     }
     private void getList() throws IOException {
         if (client.hasPassiveConnection()) {
             client.write("150 Here comes the directory listing.");
             PassiveListAsync pasvAsync = new PassiveListAsync(client);
             pasvAsync.execute();
+        }
+        else {
+            client.write("425 Use PORT or PASV first.");
         }
     }
     private void createRemoteDir(String input) throws IOException {
