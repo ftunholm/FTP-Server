@@ -56,16 +56,13 @@ public class InputHelper {
                 quit();
             }
             else if (input.startsWith("EPSV")) {
-                client.write("502 Not supported.");
+                client.write("500 Not supported.");
             }
             else if (input.startsWith("FEAT")) {
-                client.write("502 Not supported.");
+                client.write("500 Not supported.");
             }
             else if (input.startsWith("EPRT")) {
-                client.write("502 Not supported.");
-            }
-            else if (input.startsWith("XPWD")) {
-                client.write("502 Not supported.");
+                client.write("500 Not supported.");
             }
             else {
                 client.write("502 Command unknown or not implemented.");
@@ -169,10 +166,8 @@ public class InputHelper {
         if (client.hasPassiveConnection()) {
             String filename = input.replace("STOR ", "");
             File file = new File(client.getWorkingDir() + "/" + filename);
-            if (file.exists()) {
-                client.write("553 Could not create file.");
-                return;
-            }
+            file.getParentFile().mkdirs();
+
             client.write("150 Ok to send data.");
             PassiveFileUploadAsync pasvAsync = new PassiveFileUploadAsync(client, file.getAbsolutePath());
             pasvAsync.execute();

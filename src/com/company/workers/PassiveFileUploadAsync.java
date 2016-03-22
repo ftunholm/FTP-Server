@@ -22,7 +22,7 @@ public class PassiveFileUploadAsync extends SwingWorker<Void, Void> {
 
     @Override
     protected Void doInBackground() throws Exception {
-        FileOutputStream out = new FileOutputStream(filename);
+        FileOutputStream out = new FileOutputStream(filename, false);
         InputStream in = client.getPassiveConnection().getDataSocket().getInputStream();
 
         try {
